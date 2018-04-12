@@ -26,9 +26,14 @@ jobs:
       - deploy:
           name: Publish charts
           command: |
-            if [ "${CIRCLE_BRANCH}" == "master" ]; then
-              curl -sL https://raw.githubusercontent.com/bitnami/test-infra/master/circle/helm-publish-charts.sh | bash -
-            fi
+            case ${CIRCLE_BRANCH} in
+              "master_test" | "azure_test" )
+                curl -sL https://raw.githubusercontent.com/tompizmor/test-infra/chart_repo_branches/circle/helm-publish-charts.sh | bash -
+                ;;
+              * )
+                echo "Skipping chart publishing for ${CIRCLE_BRANCH} branch"
+                ;;
+            esac
 
 workflows:
   version: 2
